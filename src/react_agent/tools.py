@@ -6,7 +6,7 @@ These tools are intended as free examples to get started. For production use,
 consider implementing more robust and specialized tools tailored to your needs.
 """
 
-from typing import Any, Callable, List, Optional, cast
+from typing import Any, Callable, List, Optional, cast, Tuple
 
 from langchain_tavily import TavilySearch
 from langgraph.runtime import get_runtime
@@ -25,5 +25,21 @@ async def search(query: str) -> Optional[dict[str, Any]]:
     wrapped = TavilySearch(max_results=runtime.context.max_search_results)
     return cast(dict[str, Any], await wrapped.ainvoke({"query": query}))
 
+def draw_card(count: int):
+    """Draw N cards from a tarot deck.
 
-TOOLS: List[Callable[..., Any]] = [search]
+    This function simulates drawing a card from a tarot deck, returning a random integer
+    between 1 and 78, inclusive.
+    """
+    import random
+    deck = list(range(1, 79))
+    rng = random.Random()
+    rng.shuffle(deck)
+    cards = deck[:count]
+    result = []
+    for c in cards:
+        result.append({"card": c, "position": random.choice(["upright", "reversed"])})
+    return result
+
+TOOLS: List[Callable[..., Any]] = [search, draw_card]
+
